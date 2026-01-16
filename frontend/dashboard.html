@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Satyam Enterprises | Hardware & Technical Solutions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= HEADER / NAVBAR ================= -->
+<header class="navbar">
+  <div class="navbar-left"></div>
+  <div class="navbar-center">
+    <div class="logo-container">
+      <img id="storeLogo" class="store-logo" src="" alt="Logo" style="display: none;">
+      <div class="logo">
+        <span class="logo-main" id="storeName">SATYAM</span>
+        <span class="logo-sub" id="storeSubName">Enterprises</span>
+      </div>
+    </div>
+  </div>
+  <nav class="navbar-right">
+    <a href="#about">About</a>
+    <a href="#services">Services</a>
+    <a href="#products-section">Products</a>
+    <a href="#works-section">Works</a>
+    <a href="#achievements-section">Achievements</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <h1>Complete Hardware & Technical Solutions</h1>
+  <p>
+    CCTV • Networking • Printers • Interactive Panels • IT Support
+  </p>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section class="section about" id="about">
+  <h2>About Satyam Enterprises</h2>
+  <p class="about-text">
+    Satyam Enterprises is a professionally managed technical solutions provider
+    delivering reliable hardware services, CCTV installations, networking,
+    printer maintenance, and enterprise-grade display solutions.
+  </p>
+  <p class="about-text">
+    We focus on quality execution, long-term reliability, and transparent service.
+    Our experience across commercial, educational, and individual clients allows
+    us to deliver solutions that are secure, scalable, and cost-effective.
+  </p>
+</section>
+
+<!-- ================= SERVICES ================= -->
+<section class="section" id="services">
+  <h2>Our Core Services</h2>
+
+  <div class="grid">
+
+    <div class="card service-card">
+      <h3>CCTV Installation & Security</h3>
+      <p>
+        Complete CCTV solutions including installation, configuration,
+        maintenance, and troubleshooting for homes, offices, shops,
+        and institutions.
+      </p>
+    </div>
+
+    <div class="card service-card">
+      <h3>Hardware & IT Support</h3>
+      <p>
+        Professional diagnosis and repair of computer hardware,
+        peripherals, system upgrades, and preventive maintenance.
+      </p>
+    </div>
+
+    <div class="card service-card">
+      <h3>Printer Sales & Repair</h3>
+      <p>
+        Installation, servicing, and repair of inkjet and laser printers,
+        along with cartridge support and network printer setup.
+      </p>
+    </div>
+
+    <div class="card service-card">
+      <h3>Networking Solutions</h3>
+      <p>
+        Structured cabling, router configuration, LAN/Wi-Fi setup,
+        and network troubleshooting for smooth connectivity.
+      </p>
+    </div>
+
+    <div class="card service-card">
+      <h3>Interactive Panels & Displays</h3>
+      <p>
+        Supply and installation of interactive flat panels and digital
+        display systems for schools, colleges, and offices.
+      </p>
+    </div>
+
+    <div class="card service-card">
+      <h3>Annual Maintenance Contracts (AMC)</h3>
+      <p>
+        Reliable AMC services to ensure uninterrupted operation of
+        your technical infrastructure with priority support.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= PRODUCTS ================= -->
+<section class="section light" id="products-section">
+  <h2>Our Products</h2>
+  <div id="products" class="grid"></div>
+</section>
+
+<!-- ================= WORKS ================= -->
+<section class="section" id="works-section">
+  <h2>Recent Works</h2>
+  <div id="works" class="grid"></div>
+</section>
+
+<!-- ================= ACHIEVEMENTS ================= -->
+<section class="section light" id="achievements-section">
+  <h2>Achievements & Clients</h2>
+  <div id="achievements" class="grid"></div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section class="section contact" id="contact">
+  <h2>Contact Us</h2>
+
+  <div class="contact-box">
+    <p><strong>Satyam Enterprises</strong></p>
+    <p>📍 Flat no.107, Ganesh Vihar Apartment, Savedi, Chowk, Pipeline Rd, Bhistabag, Ahilyanagar, Maharashtra 414003</p>
+    <p>📞 +91 7558450517</p>
+    <p>📧 satyament.nagar@gmail.com</p>
+
+    <a class="whatsapp-btn"
+       href="https://wa.me/7558450517"
+       target="_blank">
+      Contact on WhatsApp
+    </a>
+  </div>
+</section>
+
+<!-- ORDER ENQUIRY MODAL -->
+<div id="orderModal" class="modal">
+  <div class="modal-content">
+    <button class="close-modal" aria-label="Close modal" onclick="closeOrderModal()">×</button>
+    <div class="modal-header">
+      <h2>Product Enquiry</h2>
+      <p id="modalProductName"></p>
+    </div>
+    
+    <form id="orderForm" onsubmit="event.preventDefault(); submitOrder();">
+      <div class="form-group">
+        <label for="orderName">Your Name <span class="required">*</span></label>
+        <input type="text" id="orderName" name="name" placeholder="Enter your name" required>
+        <div class="error-message">Please enter your name</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="orderPhone">Phone Number <span class="required">*</span></label>
+        <input type="tel" id="orderPhone" name="phone" placeholder="Enter your phone number" required>
+        <div class="error-message">Please enter a valid phone number</div>
+      </div>
+      
+      <div class="form-group">
+        <label for="orderAddress">Address <span class="required">*</span></label>
+        <textarea id="orderAddress" name="address" rows="3" placeholder="Enter your complete address" required></textarea>
+        <div class="error-message">Please enter your address</div>
+      </div>
+      
+      <button type="submit" id="submitOrderBtn" class="submit-btn">
+        <span class="btn-text">Continue to WhatsApp</span>
+      </button>
+    </form>
+  </div>
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+<footer>
+  <p>© 2026 Satyam Enterprises. All Rights Reserved.</p>
+  <a href="/admin">Admin Login</a>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>

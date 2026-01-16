@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - Satyam Enterprises</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #2874f0 0%, #1a5fc4 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      animation: slideUp 0.5s ease;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(30px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .login-header h1 {
+      color: #2874f0;
+      font-size: 28px;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .login-header p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      font-family: inherit;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #2874f0;
+      box-shadow: 0 0 0 3px rgba(40, 116, 240, 0.1);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 14px;
+      background: #2874f0;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      box-shadow: 0 4px 12px rgba(40, 116, 240, 0.3);
+    }
+
+    .login-btn:hover {
+      background: #1a5fc4;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(40, 116, 240, 0.4);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    #msg {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      display: none;
+    }
+
+    #msg.error {
+      background: #fee;
+      color: #c33;
+      border: 1px solid #fcc;
+      display: block;
+    }
+
+    #msg.success {
+      background: #efe;
+      color: #3c3;
+      border: 1px solid #cfc;
+      display: block;
+    }
+
+    .logo-preview {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-preview .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: #2874f0;
+      letter-spacing: 1px;
+    }
+
+    .logo-preview .logo-sub {
+      font-size: 12px;
+      color: #fb641b;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-header">
+      <div class="logo-preview">
+        <div class="logo-text">SATYAM</div>
+        <div class="logo-sub">Enterprises</div>
+      </div>
+      <h1>Admin Login</h1>
+      <p>Enter your credentials to access the admin panel</p>
+    </div>
+
+    <form id="loginForm" onsubmit="event.preventDefault(); login();">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          id="username" 
+          placeholder="Enter your username" 
+          required
+          autocomplete="username"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password" 
+          placeholder="Enter your password" 
+          required
+          autocomplete="current-password"
+        >
+      </div>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    function login() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+      const msgEl = document.getElementById("msg");
+      
+      if (!username || !password) {
+        msgEl.className = "error";
+        msgEl.innerText = "Please enter both username and password";
+        return;
+      }
+      
+      // Show loading state
+      const btn = document.querySelector('.login-btn');
+      const originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = "Logging in...";
+      
+      fetch("/admin/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          username: username,
+          password: password
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data.success){
+          msgEl.className = "success";
+          msgEl.innerText = "Login successful! Redirecting...";
+          setTimeout(() => {
+            window.location = "admin-panel.html";
+          }, 500);
+        } else {
+          msgEl.className = "error";
+          msgEl.innerText = data.message || "Invalid username or password";
+          btn.disabled = false;
+          btn.textContent = originalText;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        msgEl.className = "error";
+        msgEl.innerText = "Connection error. Please try again.";
+        btn.disabled = false;
+        btn.textContent = originalText;
+      });
+    }
+
+    // Allow Enter key to submit
+    document.getElementById("password").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        login();
+      }
+    });
+  </script>
+</body>
+</html>
