@@ -9,7 +9,14 @@ from flask import send_from_directory
 app = Flask(__name__, static_folder="frontend", static_url_path="")
 CORS(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///satyam.db'
+
+db_url = os.environ.get("postgresql://satyam_a2ar_user:OiqEX4Dod3wo7h0FSBQrAQGMQEYHcF6z@dpg-d5mgs21r0fns73evp28g-a/satyam_a2ar")
+
+if db_url and db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
 db = SQLAlchemy(app)
