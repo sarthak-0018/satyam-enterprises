@@ -11,19 +11,24 @@ CORS(app)
 
 # ---------------- CONFIGURATION ---------------- #
 
-# Set database URI before initializing SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///satyam.db'
+import os
+
+db_url = os.environ.get("DATABASE_URL")
+
+# Debug (temporary – remove later)
+print("DATABASE_URL:", db_url)
+
+if not db_url:
+    raise RuntimeError("DATABASE_URL not set on Render!")
+
+if db_url.startswith("postgres://"):
+    db_url = db_url.replace("postgres://", "postgresql://", 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['UPLOAD_FOLDER'] = 'uploads'
 
 db = SQLAlchemy(app)
-
-# Override with environment variable if available
-db_url = os.environ.get("DATABASE_URL")
-if db_url:
-    if db_url.startswith("postgres://"):
-        db_url = db_url.replace("postgres://", "postgresql://", 1)
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 
 
 # ---------------- MODELS ---------------- #
