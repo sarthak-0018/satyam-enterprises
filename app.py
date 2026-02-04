@@ -9,18 +9,21 @@ from flask import send_from_directory
 app = Flask(__name__, static_folder="frontend", static_url_path="")
 CORS(app)
 
+# ---------------- CONFIGURATION ---------------- #
 
+# Set database URI before initializing SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///satyam.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = 'uploads'
+
 db = SQLAlchemy(app)
 
+# Override with environment variable if available
 db_url = os.environ.get("DATABASE_URL")
-
 if db_url:
     if db_url.startswith("postgres://"):
         db_url = db_url.replace("postgres://", "postgresql://", 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = db_url
-else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///satyam.db'
 
 
 # ---------------- MODELS ---------------- #
