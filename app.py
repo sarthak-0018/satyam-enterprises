@@ -410,6 +410,15 @@ def restore_achievement(aid):
     db.session.commit()
     return jsonify({"success": True})
 
+@app.route("/debug/products")
+def debug_products():
+    products = Product.query.all()
+    return jsonify({
+        "count": len(products),
+        "products": [p.name for p in products]
+    })
+
+
 
 # ---------------- RUN ---------------- #
 
