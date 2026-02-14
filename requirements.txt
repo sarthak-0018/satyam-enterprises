@@ -4,5 +4,7 @@ flask_cors
 werkzeug
 gunicorn
 psycopg2-binary
+supabase
+python-dotenv
 
 
