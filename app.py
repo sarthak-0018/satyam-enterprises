@@ -34,7 +34,7 @@ from supabase import create_client, Client
 
 # Initialize Supabase client
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
-SUPABASE_KEY = os.environ.get("SUPABASE_KEY")  # Use SUPABASE_KEY environment variable
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     print("WARNING: SUPABASE_URL or SUPABASE_KEY not set!")
@@ -71,34 +71,38 @@ def upload_to_supabase(file, folder):
 # ---------------- MODELS ---------------- #
 
 class Admin(db.Model):
+    __tablename__ = 'admin'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50))
     password = db.Column(db.String(200))
 
 class Product(db.Model):
+    __tablename__ = 'product'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(200))
     category = db.Column(db.String(100))
     price = db.Column(db.String(50))
     description = db.Column(db.Text)
-    image = db.Column(db.String(500))  # Increased length for URLs
-    images = db.Column(db.Text)  # JSON array of image URLs
+    image = db.Column(db.String(500))
+    images = db.Column(db.Text)
     status = db.Column(db.String(20), default="active")
 
 class Work(db.Model):
+    __tablename__ = 'work'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     description = db.Column(db.Text)
-    image = db.Column(db.String(500))  # Increased length for URLs
-    images = db.Column(db.Text)  # JSON array of image URLs
+    image = db.Column(db.String(500))
+    images = db.Column(db.Text)
     status = db.Column(db.String(20), default="active")
 
 class Achievement(db.Model):
+    __tablename__ = 'achievement'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200))
     description = db.Column(db.Text)
-    image = db.Column(db.String(500))  # Increased length for URLs
-    images = db.Column(db.Text)  # JSON array of image URLs
+    image = db.Column(db.String(500))
+    images = db.Column(db.Text)
     status = db.Column(db.String(20), default="active")
 
 # ---------------- SETUP ---------------- #
@@ -108,22 +112,11 @@ os.makedirs("uploads/products", exist_ok=True)
 os.makedirs("uploads/works", exist_ok=True)
 os.makedirs("uploads/achievements", exist_ok=True)
 
-with app.app_context():
-    db.create_all()
+# IMPORTANT: Don't use db.create_all() with Supabase!
+# Tables should already exist in Supabase database
+# If you need to create tables, do it via Supabase SQL Editor
 
-    # Create default admin if no admin exists
-    if not Admin.query.first():
-        admin = Admin(username="satyam", password="SANVED2012")
-        db.session.add(admin)
-        db.session.commit()
-        print("Default admin user created: username='satyam'")
-    
-    # Remove old admin user if it exists (migration)
-    old_admin = Admin.query.filter_by(username="admin").first()
-    if old_admin:
-        db.session.delete(old_admin)
-        db.session.commit()
-        print("Old admin user removed")
+print("Flask app initialized successfully")
 
 # ---------------- ROUTES ---------------- #
 
@@ -163,7 +156,6 @@ def get_products():
                 images = json.loads(p.images)
             except:
                 images = []
-        # Backward compatibility: if no images array, use single image
         if not images and p.image:
             images = [p.image]
         result.append({
@@ -172,26 +164,24 @@ def get_products():
             "category": p.category,
             "price": p.price,
             "description": p.description,
-            "image": p.image,  # Keep for backward compatibility
+            "image": p.image,
             "images": images
         })
     return jsonify(result)
 
-# ADMIN ADD PRODUCT - NOW UPLOADS TO SUPABASE
+# ADMIN ADD PRODUCT - USES SUPABASE STORAGE
 @app.route("/admin/add-product", methods=["POST"])
 def add_product():
     try:
         data = request.form
-        images = request.files.getlist("images")  # Get multiple images
+        images = request.files.getlist("images")
         
         image_urls = []
         for img in images:
             if img.filename:
-                # Upload to Supabase Storage
                 public_url = upload_to_supabase(img, "products")
                 image_urls.append(public_url)
         
-        # Store first image for backward compatibility
         first_image = image_urls[0] if image_urls else ""
         
         product = Product(
@@ -211,8 +201,7 @@ def add_product():
         print(f"Error adding product: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
-
-# Product image endpoint - still needed for old local images
+# Product image endpoint - for old local images
 @app.route("/uploads/<path:filename>")
 def uploaded_files(filename):
     return send_from_directory("uploads", filename)
@@ -224,7 +213,7 @@ def delete_product(pid):
     if not product:
         return jsonify({"success": False}), 404
 
-    product.status = "hidden"   # soft delete
+    product.status = "hidden"
     db.session.commit()
     return jsonify({"success": True})
 
@@ -237,7 +226,6 @@ def restore_product(pid):
     product.status = "active"
     db.session.commit()
     return jsonify({"success": True})
-
 
 @app.route("/admin/products", methods=["GET"])
 def admin_products():
@@ -262,10 +250,7 @@ def admin_products():
         })
     return jsonify(result)
 
-
 # Recent Works
-
-# Show recent Works
 @app.route("/works", methods=["GET"])
 def get_works():
     works = Work.query.filter_by(status="active").all()
@@ -288,7 +273,6 @@ def get_works():
         })
     return jsonify(result)
 
-# Admin List Works
 @app.route("/admin/works", methods=["GET"])
 def admin_works():
     works = Work.query.all()
@@ -312,17 +296,15 @@ def admin_works():
         })
     return jsonify(result)
 
-# Admin ADD work - NOW UPLOADS TO SUPABASE
 @app.route("/admin/add-work", methods=["POST"])
 def add_work():
     try:
         data = request.form
-        images = request.files.getlist("images")  # Get multiple images
+        images = request.files.getlist("images")
         
         image_urls = []
         for img in images:
             if img.filename:
-                # Upload to Supabase Storage
                 public_url = upload_to_supabase(img, "works")
                 image_urls.append(public_url)
         
@@ -343,7 +325,6 @@ def add_work():
         print(f"Error adding work: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
-# Admin DELETE and Restore Works
 @app.route("/admin/delete-work/<int:wid>", methods=["DELETE"])
 def delete_work(wid):
     work = Work.query.get(wid)
@@ -353,7 +334,6 @@ def delete_work(wid):
     db.session.commit()
     return jsonify({"success": True})
 
-
 @app.route("/admin/restore-work/<int:wid>", methods=["PUT"])
 def restore_work(wid):
     work = Work.query.get(wid)
@@ -362,7 +342,6 @@ def restore_work(wid):
     work.status = "active"
     db.session.commit()
     return jsonify({"success": True})
-
 
 # Admin Achievements
 @app.route("/achievements", methods=["GET"])
@@ -387,7 +366,6 @@ def get_achievements():
         })
     return jsonify(result)
 
-# Achievement List
 @app.route("/admin/achievements", methods=["GET"])
 def admin_achievements():
     achievements = Achievement.query.all()
@@ -411,17 +389,15 @@ def admin_achievements():
         })
     return jsonify(result)
 
-# ADD Achievement - NOW UPLOADS TO SUPABASE
 @app.route("/admin/add-achievement", methods=["POST"])
 def add_achievement():
     try:
         data = request.form
-        images = request.files.getlist("images")  # Get multiple images
+        images = request.files.getlist("images")
         
         image_urls = []
         for img in images:
             if img.filename:
-                # Upload to Supabase Storage
                 public_url = upload_to_supabase(img, "achievements")
                 image_urls.append(public_url)
         
@@ -442,7 +418,6 @@ def add_achievement():
         print(f"Error adding achievement: {e}")
         return jsonify({"success": False, "error": str(e)}), 500
 
-# DELETE and Restore Achievement
 @app.route("/admin/delete-achievement/<int:aid>", methods=["DELETE"])
 def delete_achievement(aid):
     ach = Achievement.query.get(aid)
@@ -451,7 +426,6 @@ def delete_achievement(aid):
     ach.status = "hidden"
     db.session.commit()
     return jsonify({"success": True})
-
 
 @app.route("/admin/restore-achievement/<int:aid>", methods=["PUT"])
 def restore_achievement(aid):
@@ -475,6 +449,10 @@ def debug_products():
         } for p in products]
     })
 
+# Health check endpoint
+@app.route("/health")
+def health():
+    return jsonify({"status": "healthy", "message": "Flask app is running"})
 
 # ---------------- RUN ---------------- #
 
