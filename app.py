@@ -476,6 +476,12 @@ def debug_products():
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+# Keep alive ping for UptimeRobot
+@app.route("/ping")
+def ping():
+    return "pong", 200    
 
 # ---------------- RUN ---------------- #
 
