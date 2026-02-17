@@ -1,3 +1,14 @@
+// Helper: Fix image URL (don't add / before full Supabase URLs)
+function getImageUrl(img) {
+  if (!img) return '';
+  // If it's already a full URL (Supabase), use as-is
+  if (img.startsWith('http://') || img.startsWith('https://')) {
+    return img;
+  }
+  // Otherwise it's a local path, add /
+  return `/${img}`;
+}
+
 // Image Gallery Component
 function createImageGallery(images, cardId) {
   if (!images || images.length === 0) {
@@ -11,29 +22,32 @@ function createImageGallery(images, cardId) {
   }
   
   if (images.length === 1) {
+    const url = getImageUrl(images[0]);
     return `
       <div class="card-image-container">
-        <img src="/${images[0]}" alt="Product image" onclick="openModal('/${images[0]}')">
+        <img src="${url}" alt="Product image" onclick="openModal('${url}')">
       </div>
     `;
   }
   
   let thumbnails = '';
   images.forEach((img, idx) => {
+    const url = getImageUrl(img);
     thumbnails += `
-      <div class="gallery-thumbnail ${idx === 0 ? 'active' : ''}" onclick="switchGalleryImage(${cardId}, ${idx})">
-        <img src="/${img}" alt="Thumbnail ${idx + 1}">
+      <div class="gallery-thumbnail ${idx === 0 ? 'active' : ''}" onclick="switchGalleryImage('${cardId}', ${idx})">
+        <img src="${url}" alt="Thumbnail ${idx + 1}">
       </div>
     `;
   });
   
+  const firstUrl = getImageUrl(images[0]);
   return `
     <div class="image-gallery" id="gallery-${cardId}">
       <div class="gallery-main">
-        <img src="/${images[0]}" alt="Main image" id="main-img-${cardId}" onclick="openModal('/${images[0]}')">
+        <img src="${firstUrl}" alt="Main image" id="main-img-${cardId}" onclick="openModal('${firstUrl}')">
         ${images.length > 1 ? `
-          <button class="gallery-nav prev" onclick="prevImage(${cardId}, ${images.length})">‹</button>
-          <button class="gallery-nav next" onclick="nextImage(${cardId}, ${images.length})">›</button>
+          <button class="gallery-nav prev" onclick="prevImage('${cardId}', ${images.length})">‹</button>
+          <button class="gallery-nav next" onclick="nextImage('${cardId}', ${images.length})">›</button>
         ` : ''}
       </div>
       ${images.length > 1 ? `
@@ -52,10 +66,12 @@ function switchGalleryImage(cardId, index) {
   const images = galleryStates[cardId];
   if (!images || !images[index]) return;
   
+  const url = getImageUrl(images[index]); // FIXED: use getImageUrl
+  
   const mainImg = document.getElementById(`main-img-${cardId}`);
   if (mainImg) {
-    mainImg.src = `/${images[index]}`;
-    mainImg.onclick = () => openModal(`/${images[index]}`);
+    mainImg.src = url;
+    mainImg.onclick = () => openModal(url);
   }
   
   // Update thumbnails
@@ -132,7 +148,7 @@ document.addEventListener('keydown', function(e) {
   }
 });
 
-// PRODUCTS - Flipkart/Amazon Style
+// PRODUCTS
 fetch("/products")
   .then(r => r.json())
   .then(data => {
@@ -229,37 +245,27 @@ fetch("/settings")
     const storeNameEl = document.getElementById("storeName");
     const storeSubNameEl = document.getElementById("storeSubName");
     
-    if (storeNameEl) {
-      storeNameEl.textContent = mainName.toUpperCase();
-    }
-    if (storeSubNameEl) {
-      storeSubNameEl.textContent = subName;
-    }
+    if (storeNameEl) storeNameEl.textContent = mainName.toUpperCase();
+    if (storeSubNameEl) storeSubNameEl.textContent = subName;
     
-    // Only try to load logo if it exists in settings and is not empty
     if (settings.logo && settings.logo.trim() !== '') {
       const logoEl = document.getElementById("storeLogo");
       if (logoEl) {
-        // Create a test image to check if the logo exists
+        const logoUrl = getImageUrl(settings.logo); // FIXED: use getImageUrl
         const testImg = new Image();
         testImg.onload = function() {
-          // Only set the source if the image loads successfully
-          logoEl.src = `/${settings.logo}`;
+          logoEl.src = logoUrl;
           logoEl.style.display = "block";
           logoEl.alt = `${storeName} Logo`;
         };
         testImg.onerror = function() {
-          // Hide the logo element if the image fails to load
           logoEl.style.display = "none";
         };
-        testImg.src = `/${settings.logo}`;
+        testImg.src = logoUrl;
       }
     } else {
-      // Hide the logo element if no logo is specified in settings
       const logoEl = document.getElementById("storeLogo");
-      if (logoEl) {
-        logoEl.style.display = "none";
-      }
+      if (logoEl) logoEl.style.display = "none";
     }
   })
   .catch(err => console.error("Error loading settings:", err));
@@ -268,26 +274,18 @@ fetch("/settings")
 
 let selectedProductName = "";
 
-// Initialize modal functionality
 document.addEventListener('DOMContentLoaded', function() {
-  // Close modal when clicking outside content
   const modal = document.getElementById('orderModal');
   if (modal) {
     modal.addEventListener('click', function(e) {
-      if (e.target === modal) {
-        closeOrderModal();
-      }
+      if (e.target === modal) closeOrderModal();
     });
   }
   
-  // Close modal with Escape key
   document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      closeOrderModal();
-    }
+    if (e.key === 'Escape') closeOrderModal();
   });
   
-  // Initialize form validation
   const form = document.getElementById('orderForm');
   if (form) {
     form.addEventListener('submit', function(e) {
@@ -295,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
       submitOrder();
     });
     
-    // Add input validation on blur
     const inputs = form.querySelectorAll('input[required], textarea[required]');
     inputs.forEach(input => {
       input.addEventListener('blur', function() {
@@ -305,40 +302,28 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Open modal
 function openOrderModal(productName) {
   try {
     selectedProductName = productName;
     const modal = document.getElementById("orderModal");
-    if (!modal) {
-      console.error('Order modal element not found');
-      return;
-    }
+    if (!modal) return;
     
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
     
-    // Set product name in modal
     const productTitle = document.getElementById("modalProductName");
-    if (productTitle) {
-      productTitle.textContent = productName;
-    }
+    if (productTitle) productTitle.textContent = productName;
     
-    // Set focus on first input field
     setTimeout(() => {
       const nameInput = document.getElementById("orderName");
-      if (nameInput) {
-        nameInput.focus();
-      }
+      if (nameInput) nameInput.focus();
     }, 100);
     
   } catch (error) {
     console.error('Error opening order modal:', error);
-    alert('Unable to open the order form. Please try again.');
   }
 }
 
-// Close modal
 function closeOrderModal() {
   try {
     const modal = document.getElementById("orderModal");
@@ -347,51 +332,36 @@ function closeOrderModal() {
       document.body.style.overflow = '';
     }
     
-    // Reset form
     const form = document.getElementById("orderForm");
-    if (form) {
-      form.reset();
-    }
+    if (form) form.reset();
     
-    // Reset error states
-    const errorMessages = document.querySelectorAll('.error-message');
-    errorMessages.forEach(el => el.style.display = 'none');
-    
-    const errorInputs = document.querySelectorAll('.error');
-    errorInputs.forEach(el => el.classList.remove('error'));
+    document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
     
   } catch (error) {
     console.error('Error closing modal:', error);
   }
 }
 
-// Validate form field
 function validateField(field) {
   const errorElement = field.nextElementSibling;
   if (!errorElement || !errorElement.classList.contains('error-message')) return true;
   
   let isValid = true;
-  
-  // Clear previous error
   field.classList.remove('error');
   errorElement.style.display = 'none';
   
-  // Check required fields
   if (field.required && !field.value.trim()) {
     errorElement.textContent = 'This field is required';
     errorElement.style.display = 'block';
     field.classList.add('error');
     isValid = false;
-  } 
-  // Validate email format
-  else if (field.type === 'email' && field.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
+  } else if (field.type === 'email' && field.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(field.value)) {
     errorElement.textContent = 'Please enter a valid email address';
     errorElement.style.display = 'block';
     field.classList.add('error');
     isValid = false;
-  }
-  // Validate phone number format
-  else if (field.id === 'orderPhone' && field.value && !/^[0-9]{10,15}$/.test(field.value)) {
+  } else if (field.id === 'orderPhone' && field.value && !/^[0-9]{10,15}$/.test(field.value)) {
     errorElement.textContent = 'Please enter a valid phone number (10-15 digits)';
     errorElement.style.display = 'block';
     field.classList.add('error');
@@ -401,78 +371,49 @@ function validateField(field) {
   return isValid;
 }
 
-// Submit order (WhatsApp-based)
 function submitOrder() {
   try {
-    // Get form elements
     const form = document.getElementById('orderForm');
     const nameInput = document.getElementById('orderName');
     const phoneInput = document.getElementById('orderPhone');
     const addressInput = document.getElementById('orderAddress');
     const submitBtn = document.getElementById('submitOrderBtn');
     
-    if (!form || !nameInput || !phoneInput || !submitBtn) {
-      throw new Error('Form elements not found');
-    }
+    if (!form || !nameInput || !phoneInput || !submitBtn) return;
     
-    // Validate all required fields
     let isValid = true;
-    const requiredFields = form.querySelectorAll('[required]');
-    requiredFields.forEach(field => {
-      if (!validateField(field)) {
-        isValid = false;
-      }
+    form.querySelectorAll('[required]').forEach(field => {
+      if (!validateField(field)) isValid = false;
     });
     
     if (!isValid) {
-      // Find first error and focus it
       const firstError = form.querySelector('.error');
-      if (firstError) {
-        firstError.focus();
-      }
+      if (firstError) firstError.focus();
       return;
     }
     
-    // Get form values
     const name = nameInput.value.trim();
     const phone = phoneInput.value.trim();
     const address = addressInput ? addressInput.value.trim() : '';
     
-    // Save button state
     const originalBtnText = submitBtn.querySelector('.btn-text').textContent;
-    
-    // Show loading state
     submitBtn.disabled = true;
     submitBtn.classList.add('loading');
     submitBtn.querySelector('.btn-text').textContent = 'Opening WhatsApp...';
     
-    // Use the admin's phone number from contact section
-    const adminPhone = "7558450517"; // From dashboard.html contact section
+    const adminPhone = "7558450517";
     
-    if (!adminPhone) {
-      throw new Error('Admin WhatsApp number not configured. Please contact support.');
-    }
-    
-    // Create WhatsApp message
     const message = `🔔 *New Product Enquiry* 🔔
 
 *Product:* ${selectedProductName || 'Not specified'}
 *Name:* ${name}
 *Phone:* ${phone}
 ${address ? `*Address:* ${address}\n` : ''}
-
 _${new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}_`.trim();
     
-    // Encode message for URL
-    const encodedMessage = encodeURIComponent(message);
-    
-    // Open WhatsApp with pre-filled message
-    const whatsappURL = `https://wa.me/${adminPhone}?text=${encodedMessage}`;
-    
-    // Open in new tab
+    const whatsappURL = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
     window.open(whatsappURL, '_blank');
     
-    // Reset form and close modal
     form.reset();
     setTimeout(() => {
       closeOrderModal();
@@ -483,41 +424,28 @@ _${new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' 
     
   } catch (error) {
     console.error('Error submitting order:', error);
-    alert(`Error: ${error.message || 'Failed to submit your enquiry. Please try again.'}`);
-    
-    // Reset button state
+    alert(`Error: ${error.message || 'Failed to submit. Please try again.'}`);
     const submitBtn = document.getElementById('submitOrderBtn');
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.classList.remove('loading');
       const btnText = submitBtn.querySelector('.btn-text');
-      if (btnText) {
-        btnText.textContent = 'Send Enquiry';
-      }
+      if (btnText) btnText.textContent = 'Send Enquiry';
     }
   }
 }
 
-// Smooth scroll for navigation links
+// Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
     e.preventDefault();
     const target = document.querySelector(this.getAttribute('href'));
-    if (target) {
-      target.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 });
 
-// Intersection Observer for fade-in animations on scroll
-const observerOptions = {
-  threshold: 0.1,
-  rootMargin: '0px 0px -50px 0px'
-};
-
+// Fade-in animations
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -527,7 +455,6 @@ const observer = new IntersectionObserver((entries) => {
   });
 }, observerOptions);
 
-// Observe all cards
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     document.querySelectorAll('.card').forEach(card => {
