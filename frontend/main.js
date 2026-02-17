@@ -175,6 +175,16 @@ fetch("/products")
               ${p.description ? `<p class="card-description">${p.description.substring(0, 100)}${p.description.length > 100 ? '...' : ''}</p>` : ''}
               ${p.price ? `<p class="product-price">${p.price}</p>` : ''}
               <button class="enquire-btn" onclick="event.stopPropagation(); openOrderModal('${p.name.replace(/'/g, "\\'")}')">
+                Buy / Enquire
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+  })
+  .catch(err => {
+    console.error("Error loading products:", err);
+    document.getElementById("products").innerHTML = "<p style='text-align: center; padding: 40px; color: #666;'>Error loading products. Please try again later.</p>";
   });
 
 // WORKS
