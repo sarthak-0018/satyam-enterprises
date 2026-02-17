@@ -1,3 +1,10 @@
+// Data maps for modal functionality
+const modalDataMap = {
+  products: {},
+  works: {},
+  achievements: {}
+};
+
 // Helper: Fix image URL (don't add / before full Supabase URLs)
 function getImageUrl(img) {
   if (!img) return '';
@@ -158,25 +165,16 @@ fetch("/products")
         const images = p.images && p.images.length > 0 ? p.images : (p.image ? [p.image] : []);
         const cardId = `product-${cardCounter++}`;
         galleryStates[cardId] = images;
+        modalDataMap.products[p.id] = p;
         
         return `
-          <div class="card product-card" data-id="${p.id}" onclick="openDescriptionModal('product', ${JSON.stringify(p).replace(/'/g, '&apos;')})">
+          <div class="card product-card" data-id="${p.id}" onclick="openDescriptionModal('product', ${p.id})">
             ${createImageGallery(images, cardId)}
             <div class="card-content">
               <h4>${p.name}</h4>
               ${p.description ? `<p class="card-description">${p.description.substring(0, 100)}${p.description.length > 100 ? '...' : ''}</p>` : ''}
               ${p.price ? `<p class="product-price">${p.price}</p>` : ''}
               <button class="enquire-btn" onclick="event.stopPropagation(); openOrderModal('${p.name.replace(/'/g, "\\'")}')">
-                Buy / Enquire
-              </button>
-            </div>
-          </div>
-        `;
-      }).join("");
-  })
-  .catch(err => {
-    console.error("Error loading products:", err);
-    document.getElementById("products").innerHTML = "<p style='text-align: center; padding: 40px; color: #666;'>Error loading products. Please try again later.</p>";
   });
 
 // WORKS
@@ -189,9 +187,10 @@ fetch("/works")
         const images = w.images && w.images.length > 0 ? w.images : (w.image ? [w.image] : []);
         const cardId = `work-${cardCounter++}`;
         galleryStates[cardId] = images;
+        modalDataMap.works[w.id] = w;
         
         return `
-          <div class="card work-card" data-id="${w.id}" onclick="openDescriptionModal('work', ${JSON.stringify(w).replace(/'/g, '&apos;')})">
+          <div class="card work-card" data-id="${w.id}" onclick="openDescriptionModal('work', ${w.id})">
             ${createImageGallery(images, cardId)}
             <div class="card-content">
               <h4>${w.title}</h4>
@@ -216,9 +215,10 @@ fetch("/achievements")
         const images = a.images && a.images.length > 0 ? a.images : (a.image ? [a.image] : []);
         const cardId = `achievement-${cardCounter++}`;
         galleryStates[cardId] = images;
+        modalDataMap.achievements[a.id] = a;
         
         return `
-          <div class="card achievement-card" data-id="${a.id}" onclick="openDescriptionModal('achievement', ${JSON.stringify(a).replace(/'/g, '&apos;')})">
+          <div class="card achievement-card" data-id="${a.id}" onclick="openDescriptionModal('achievement', ${a.id})">
             ${createImageGallery(images, cardId)}
             <div class="card-content">
               <h4>${a.title}</h4>
@@ -274,10 +274,22 @@ fetch("/settings")
 
 let currentModalItem = null;
 
-function openDescriptionModal(type, item) {
+function openDescriptionModal(type, id) {
+  // Retrieve item from map (handle both singular and plural type names)
+  const mapType = type === 'product' ? 'products' : (type === 'work' ? 'works' : 'achievements');
+  const item = modalDataMap[mapType][id];
+  
+  if (!item) {
+    console.error('Item not found:', type, id);
+    return;
+  }
+  
   currentModalItem = { type, item };
   const modal = document.getElementById('descriptionModal');
-  if (!modal) return;
+  if (!modal) {
+    console.error('Description modal not found');
+    return;
+  }
   
   // Set title
   const titleEl = document.getElementById('descriptionTitle');
@@ -398,7 +410,7 @@ function handleModalAction() {
 // Close modal on overlay click
 document.addEventListener('click', function(e) {
   const modal = document.getElementById('descriptionModal');
-  if (modal && e.target === modal.querySelector('.description-modal-overlay')) {
+  if (modal && e.target && e.target.classList && e.target.classList.contains('description-modal-overlay')) {
     closeDescriptionModal();
   }
 });
