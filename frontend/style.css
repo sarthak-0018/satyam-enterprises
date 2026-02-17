@@ -1175,3 +1175,234 @@ footer a:hover {
 .mb-2 { margin-bottom: var(--spacing-md); }
 .mb-3 { margin-bottom: var(--spacing-lg); }
 
+/* ==================== DESCRIPTION MODAL ==================== */
+
+.description-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.description-modal.active {
+  display: flex;
+}
+
+.description-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
+}
+
+.description-modal-content {
+  position: relative;
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-description-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 32px;
+  color: var(--gray-600);
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color var(--transition-base), color var(--transition-base);
+  z-index: 10;
+}
+
+.close-description-modal:hover {
+  background-color: var(--gray-200);
+  color: var(--gray-900);
+}
+
+.description-modal-header {
+  padding: 30px 30px 20px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.description-modal-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  color: var(--gray-900);
+}
+
+.description-category {
+  color: var(--gray-600);
+  font-size: 14px;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.description-modal-body {
+  padding: 30px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+.description-images {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.description-gallery-main {
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.description-gallery-main img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform var(--transition-base);
+}
+
+.description-gallery-main img:hover {
+  transform: scale(1.05);
+}
+
+.description-gallery-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.description-gallery-thumbnail {
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: border-color var(--transition-base);
+}
+
+.description-gallery-thumbnail img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  display: block;
+  transition: opacity var(--transition-base);
+}
+
+.description-gallery-thumbnail.active {
+  border-color: var(--primary-blue);
+}
+
+.description-gallery-thumbnail:hover img {
+  opacity: 0.8;
+}
+
+.description-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.description-content p {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--gray-700);
+  font-size: 16px;
+}
+
+.description-price {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-top: 12px !important;
+}
+
+.description-modal-footer {
+  padding: 20px 30px;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+/* ==================== CARD INTERACTION ==================== */
+
+.card {
+  cursor: pointer;
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 768px) {
+  .description-modal-content {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .description-modal-body {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .description-gallery-main img {
+    height: 250px;
+  }
+
+  .description-modal-header {
+    padding: 20px 20px 16px;
+  }
+
+  .description-modal-body {
+    padding: 20px;
+  }
+
+  .description-modal-footer {
+    padding: 16px 20px;
+  }
+
+  .close-description-modal {
+    top: 10px;
+    right: 10px;
+  }
+}
+

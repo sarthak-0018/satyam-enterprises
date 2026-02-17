@@ -183,6 +183,27 @@
   </div>
 </div>
 
+<!-- DESCRIPTION MODAL FOR PRODUCTS/WORKS/ACHIEVEMENTS -->
+<div id="descriptionModal" class="description-modal">
+  <div class="description-modal-overlay"></div>
+  <div class="description-modal-content">
+    <button class="close-description-modal" aria-label="Close modal" onclick="closeDescriptionModal()">×</button>
+    <div class="description-modal-header">
+      <h2 id="descriptionTitle"></h2>
+      <p id="descriptionCategory" class="description-category" style="display:none;"></p>
+    </div>
+    <div class="description-modal-body">
+      <div id="descriptionImages" class="description-images"></div>
+      <div id="descriptionContent" class="description-content">
+        <p id="descriptionText"></p>
+        <p id="descriptionPrice" class="description-price" style="display:none;"></p>
+      </div>
+    </div>
+    <div class="description-modal-footer">
+      <button id="descriptionActionBtn" class="btn btn-primary" onclick="handleModalAction()">Buy / Enquire</button>
+    </div>
+  </div>
+</div>
 
 <!-- ================= FOOTER ================= -->
 <footer>

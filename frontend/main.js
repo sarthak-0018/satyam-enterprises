@@ -160,13 +160,13 @@ fetch("/products")
         galleryStates[cardId] = images;
         
         return `
-          <div class="card product-card" data-id="${p.id}">
+          <div class="card product-card" data-id="${p.id}" onclick="openDescriptionModal('product', ${JSON.stringify(p).replace(/'/g, '&apos;')})">
             ${createImageGallery(images, cardId)}
             <div class="card-content">
               <h4>${p.name}</h4>
-              ${p.description ? `<p class="card-description">${p.description}</p>` : ''}
+              ${p.description ? `<p class="card-description">${p.description.substring(0, 100)}${p.description.length > 100 ? '...' : ''}</p>` : ''}
               ${p.price ? `<p class="product-price">${p.price}</p>` : ''}
-              <button class="enquire-btn" onclick="openOrderModal('${p.name.replace(/'/g, "\\'")}')">
+              <button class="enquire-btn" onclick="event.stopPropagation(); openOrderModal('${p.name.replace(/'/g, "\\'")}')">
                 Buy / Enquire
               </button>
             </div>
@@ -191,11 +191,11 @@ fetch("/works")
         galleryStates[cardId] = images;
         
         return `
-          <div class="card work-card" data-id="${w.id}">
+          <div class="card work-card" data-id="${w.id}" onclick="openDescriptionModal('work', ${JSON.stringify(w).replace(/'/g, '&apos;')})">
             ${createImageGallery(images, cardId)}
             <div class="card-content">
               <h4>${w.title}</h4>
-              ${w.description ? `<p class="card-description">${w.description}</p>` : ''}
+              ${w.description ? `<p class="card-description">${w.description.substring(0, 100)}${w.description.length > 100 ? '...' : ''}</p>` : ''}
             </div>
           </div>
         `;
@@ -218,11 +218,11 @@ fetch("/achievements")
         galleryStates[cardId] = images;
         
         return `
-          <div class="card achievement-card" data-id="${a.id}">
+          <div class="card achievement-card" data-id="${a.id}" onclick="openDescriptionModal('achievement', ${JSON.stringify(a).replace(/'/g, '&apos;')})">
             ${createImageGallery(images, cardId)}
             <div class="card-content">
               <h4>${a.title}</h4>
-              ${a.description ? `<p class="card-description">${a.description}</p>` : ''}
+              ${a.description ? `<p class="card-description">${a.description.substring(0, 100)}${a.description.length > 100 ? '...' : ''}</p>` : ''}
             </div>
           </div>
         `;
@@ -269,6 +269,146 @@ fetch("/settings")
     }
   })
   .catch(err => console.error("Error loading settings:", err));
+
+// ================= DESCRIPTION MODAL SYSTEM =================
+
+let currentModalItem = null;
+
+function openDescriptionModal(type, item) {
+  currentModalItem = { type, item };
+  const modal = document.getElementById('descriptionModal');
+  if (!modal) return;
+  
+  // Set title
+  const titleEl = document.getElementById('descriptionTitle');
+  titleEl.textContent = item.name || item.title || '';
+  
+  // Set category (products only)
+  const categoryEl = document.getElementById('descriptionCategory');
+  if (type === 'product' && item.category) {
+    categoryEl.textContent = item.category;
+    categoryEl.style.display = 'block';
+  } else {
+    categoryEl.style.display = 'none';
+  }
+  
+  // Set images
+  const images = (item.images && item.images.length > 0) ? item.images : (item.image ? [item.image] : []);
+  const imagesEl = document.getElementById('descriptionImages');
+  
+  if (images.length === 0) {
+    imagesEl.innerHTML = '<div style="width: 100%; height: 300px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center;">No Image</div>';
+  } else if (images.length === 1) {
+    const url = getImageUrl(images[0]);
+    imagesEl.innerHTML = `
+      <div class="description-gallery-main">
+        <img src="${url}" alt="Product image" onclick="openModal('${url}')">
+      </div>
+    `;
+  } else {
+    let thumbnails = '';
+    images.forEach((img, idx) => {
+      const url = getImageUrl(img);
+      thumbnails += `
+        <div class="description-gallery-thumbnail ${idx === 0 ? 'active' : ''}" onclick="switchDescriptionImage(${idx})">
+          <img src="${url}" alt="Thumbnail ${idx + 1}">
+        </div>
+      `;
+    });
+    
+    const firstUrl = getImageUrl(images[0]);
+    imagesEl.innerHTML = `
+      <div class="description-gallery-main">
+        <img id="description-main-img" src="${firstUrl}" alt="Main image" onclick="openModal('${firstUrl}')">
+      </div>
+      <div class="description-gallery-thumbnails" id="description-thumbnails">
+        ${thumbnails}
+      </div>
+    `;
+  }
+  
+  // Set description
+  const descEl = document.getElementById('descriptionText');
+  descEl.textContent = item.description || 'No description available';
+  
+  // Set price (products only)
+  const priceEl = document.getElementById('descriptionPrice');
+  if (type === 'product' && item.price) {
+    priceEl.textContent = item.price;
+    priceEl.style.display = 'block';
+  } else {
+    priceEl.style.display = 'none';
+  }
+  
+  // Set action button
+  const actionBtn = document.getElementById('descriptionActionBtn');
+  if (type === 'product') {
+    actionBtn.style.display = 'block';
+    actionBtn.textContent = 'Buy / Enquire';
+  } else {
+    actionBtn.style.display = 'none';
+  }
+  
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+  
+  // Store images globally for switching
+  window.descriptionImages = images;
+}
+
+function switchDescriptionImage(index) {
+  const images = window.descriptionImages;
+  if (!images || !images[index]) return;
+  
+  const url = getImageUrl(images[index]);
+  const mainImg = document.getElementById('description-main-img');
+  if (mainImg) {
+    mainImg.src = url;
+    mainImg.onclick = () => openModal(url);
+  }
+  
+  // Update thumbnails
+  const thumbnails = document.querySelectorAll('.description-gallery-thumbnail');
+  thumbnails.forEach((thumb, idx) => {
+    if (idx === index) {
+      thumb.classList.add('active');
+    } else {
+      thumb.classList.remove('active');
+    }
+  });
+}
+
+function closeDescriptionModal() {
+  const modal = document.getElementById('descriptionModal');
+  if (modal) {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  currentModalItem = null;
+  window.descriptionImages = null;
+}
+
+function handleModalAction() {
+  if (!currentModalItem || currentModalItem.type !== 'product') return;
+  event.stopPropagation();
+  closeDescriptionModal();
+  openOrderModal(currentModalItem.item.name);
+}
+
+// Close modal on overlay click
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('descriptionModal');
+  if (modal && e.target === modal.querySelector('.description-modal-overlay')) {
+    closeDescriptionModal();
+  }
+});
+
+// Close modal on ESC key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeDescriptionModal();
+  }
+});
 
 // ================= ORDER ENQUIRY SYSTEM =================
 
