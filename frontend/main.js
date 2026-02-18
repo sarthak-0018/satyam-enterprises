@@ -597,6 +597,19 @@ _${new Date().toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' 
   }
 }
 
+// FAQ Toggle Function
+function toggleFAQ(button) {
+  const faqItem = button.closest('.faq-item');
+  if (!faqItem) return;
+  
+  faqItem.classList.toggle('active');
+  
+  // Close other active FAQs if you want only one open at a time (optional)
+  // document.querySelectorAll('.faq-item.active').forEach(item => {
+  //   if (item !== faqItem) item.classList.remove('active');
+  // });
+}
+
 // Smooth scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   anchor.addEventListener('click', function (e) {
