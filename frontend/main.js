@@ -412,9 +412,16 @@ function closeDescriptionModal() {
 
 function handleModalAction() {
   if (!currentModalItem || currentModalItem.type !== 'product') return;
-  event.stopPropagation();
+  // Close product description and open order modal for enquiries
   closeDescriptionModal();
   openOrderModal(currentModalItem.item.name);
+}
+
+// Service toggle function
+function toggleService(button) {
+  const serviceItem = button.closest('.service-item');
+  if (!serviceItem) return;
+  serviceItem.classList.toggle('active');
 }
 
 // Close modal on overlay click
