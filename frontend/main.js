@@ -522,11 +522,17 @@ function openOrderAndWhatsApp(productName) {
     // Open the order modal so the user can fill details if they want
     openOrderModal(productName);
 
-    // Build a short quick-enquiry message and open WhatsApp in a new tab
-    const adminPhone = "7558450517";
-    const message = `Hi Satyam Enterprises, I'm interested in *${productName}*. Please contact me regarding availability and pricing.`;
-    const whatsappURL = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappURL, '_blank');
+    // Delay opening WhatsApp slightly so the order modal is visible first
+    setTimeout(() => {
+      try {
+        const adminPhone = "7558450517";
+        const message = `Hi Satyam Enterprises, I'm interested in *${productName}*. Please contact me regarding availability and pricing.`;
+        const whatsappURL = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
+        window.open(whatsappURL, '_blank');
+      } catch (err) {
+        console.error('Error opening WhatsApp:', err);
+      }
+    }, 450);
   } catch (err) {
     console.error('Error in openOrderAndWhatsApp:', err);
   }
