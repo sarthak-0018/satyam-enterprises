@@ -348,6 +348,7 @@ a:hover {
   animation: fadeInUp 1s ease-out 0.4s both;
   opacity: 0.95;
   margin-bottom: var(--spacing-2xl);
+  color: black;
 }
 
 .hero-cta {
