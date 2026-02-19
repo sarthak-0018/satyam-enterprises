@@ -35,7 +35,13 @@
 
 <!-- ================= HEADER / NAVBAR ================= -->
 <header class="navbar">
-  <div class="navbar-left"></div>
+  <div class="navbar-left">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
   <div class="navbar-center">
     <div class="logo-container">
       <img id="storeLogo" class="store-logo" src="" alt="Satyam Enterprises Logo - CCTV & IT Solutions Ahmednagar" style="display: none;">
@@ -45,99 +51,149 @@
       </div>
     </div>
   </div>
-  <nav class="navbar-right">
-    <a href="#about">About</a>
-    <a href="#services">Services</a>
-    <a href="#products-section">Products</a>
-    <a href="#works-section">Works</a>
-    <a href="#achievements-section">Achievements</a>
-    <a href="#faq">FAQ</a>
-    <a href="#contact">Contact</a>
+  <nav class="navbar-right" id="navMenu">
+    <a href="#about" class="nav-link">About</a>
+    <a href="#services" class="nav-link">Services</a>
+    <a href="#products-section" class="nav-link">Products</a>
+    <a href="#works-section" class="nav-link">Works</a>
+    <a href="#achievements-section" class="nav-link">Achievements</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="#contact" class="nav-link">Contact</a>
   </nav>
 </header>
 
 <!-- ================= HERO ================= -->
 <section class="hero">
-  <h1>Professional CCTV Installation & Computer Repair Services in Ahmednagar</h1>
-  <p>
-    CCTV Installation • Computer Hardware Repair • Printer Services • Networking Solutions • Interactive Panels • IT Support in Ahmednagar, Maharashtra
-  </p>
+  <div class="hero-content">
+    <h1>Professional CCTV Installation & Computer Repair Services in Ahmednagar</h1>
+    <p class="hero-tagline">
+      CCTV Installation • Computer Hardware Repair • Printer Services • Networking Solutions • Interactive Panels • IT Support in Ahmednagar, Maharashtra
+    </p>
+    <div class="hero-cta">
+      <a href="#contact" class="cta-button primary">Get in Touch</a>
+      <a href="#services" class="cta-button secondary">Explore Services</a>
+    </div>
+  </div>
 </section>
 
 <!-- ================= ABOUT ================= -->
 <section class="section about" id="about">
   <h2>About Satyam Enterprises - Ahmednagar's Trusted IT Solutions Provider</h2>
-  <p class="about-text">
-    <strong>Satyam Enterprises</strong> is Ahmednagar's leading technical solutions provider, 
-    serving homes, offices, shops, and institutions across <strong>Ahmednagar city and district since 2012</strong>. 
-    We specialize in <strong>CCTV installation in Ahmednagar</strong>, 
-    <strong>computer hardware repair</strong>, <strong>printer sales and service</strong>, 
-    networking solutions, and complete IT support for businesses throughout Ahmednagar, Savedi, Bhistabag, and surrounding areas.
-  </p>
-  <p class="about-text">
-    Our expert technicians provide reliable, affordable, and professional services with same-day support for urgent repairs. 
-    Whether you need CCTV security systems for your home or office, computer troubleshooting, printer maintenance, 
-    network setup, or interactive display panels for educational institutions, we're Ahmednagar's trusted choice for 
-    quality technical solutions. We also offer Annual Maintenance Contracts (AMC) with priority support and competitive pricing.
-  </p>
-  <p class="about-text">
-    <strong>Serving:</strong> Ahmednagar City, Savedi, Bhistabag, Station Road, MIDC Area, Kedgaon, Shrirampur, 
-    Newasa, and all surrounding villages in Ahmednagar District, Maharashtra.
-  </p>
+  <div class="about-container">
+    <div class="about-content">
+      <p class="about-text">
+        <strong>Satyam Enterprises</strong> is Ahmednagar's leading technical solutions provider, 
+        serving homes, offices, shops, and institutions across <strong>Ahmednagar city and district since 2012</strong>. 
+        We specialize in <strong>CCTV installation in Ahmednagar</strong>, 
+        <strong>computer hardware repair</strong>, <strong>printer sales and service</strong>, 
+        networking solutions, and complete IT support for businesses throughout Ahmednagar, Savedi, Bhistabag, and surrounding areas.
+      </p>
+      <p class="about-text">
+        Our expert technicians provide reliable, affordable, and professional services with same-day support for urgent repairs. 
+        Whether you need CCTV security systems for your home or office, computer troubleshooting, printer maintenance, 
+        network setup, or interactive display panels for educational institutions, we're Ahmednagar's trusted choice for 
+        quality technical solutions. We also offer Annual Maintenance Contracts (AMC) with priority support and competitive pricing.
+      </p>
+      <p class="about-text">
+        <strong>Serving:</strong> Ahmednagar City, Savedi, Bhistabag, Station Road, MIDC Area, Kedgaon, Shrirampur, 
+        Newasa, and all surrounding villages in Ahmednagar District, Maharashtra.
+      </p>
+    </div>
+    <div class="about-features">
+      <div class="feature-box">
+        <div class="feature-icon">🎯</div>
+        <h4>Expert Technicians</h4>
+        <p>14+ years of technical excellence</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">⚡</div>
+        <h4>Same-Day Service</h4>
+        <p>Quick response for urgent issues</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">🌐</div>
+        <h4>Full Coverage</h4>
+        <p>All of Ahmednagar district</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon">💼</div>
+        <h4>24/7 Support</h4>
+        <p>Always available when you need us</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- ================= SERVICES ================= -->
-<section class="section" id="services">
+<section class="section services-section" id="services">
   <h2>Our Professional Technical Services in Ahmednagar</h2>
 
-  <div class="grid">
+  <div class="services-grid">
 
-    <div class="service-item card">
-      <button class="service-question" onclick="toggleService(this)">
-        <span>🎥 CCTV Installation & Security Systems</span>
-        <span class="faq-toggle">+</span>
+    <div class="service-card">
+      <button class="service-header" onclick="toggleService(this)">
+        <div class="service-icon">🎥</div>
+        <div class="service-text">
+          <h3>CCTV Installation & Security Systems</h3>
+        </div>
+        <span class="service-toggle">+</span>
       </button>
-      <p class="service-answer">Complete <strong>CCTV installation services in Ahmednagar</strong> including camera installation, DVR/NVR setup, remote viewing configuration, maintenance, and troubleshooting for homes, offices, retail shops, warehouses, and institutions. We work with all major brands (Hikvision, CP Plus, Dahua) and provide 24/7 technical support.</p>
+      <p class="service-body">Complete <strong>CCTV installation services in Ahmednagar</strong> including camera installation, DVR/NVR setup, remote viewing configuration, maintenance, and troubleshooting for homes, offices, retail shops, warehouses, and institutions. We work with all major brands (Hikvision, CP Plus, Dahua) and provide 24/7 technical support.</p>
     </div>
 
-    <div class="service-item card">
-      <button class="service-question" onclick="toggleService(this)">
-        <span>💻 Computer Hardware Repair & IT Support</span>
-        <span class="faq-toggle">+</span>
+    <div class="service-card">
+      <button class="service-header" onclick="toggleService(this)">
+        <div class="service-icon">💻</div>
+        <div class="service-text">
+          <h3>Computer Hardware Repair & IT Support</h3>
+        </div>
+        <span class="service-toggle">+</span>
       </button>
-      <p class="service-answer">Professional <strong>computer repair services in Ahmednagar</strong> including hardware diagnosis, motherboard repair, RAM upgrades, hard drive replacement, virus removal, data recovery, system optimization, and preventive maintenance. We repair desktops, laptops, and servers of all brands.</p>
+      <p class="service-body">Professional <strong>computer repair services in Ahmednagar</strong> including hardware diagnosis, motherboard repair, RAM upgrades, hard drive replacement, virus removal, data recovery, system optimization, and preventive maintenance. We repair desktops, laptops, and servers of all brands.</p>
     </div>
 
-    <div class="service-item card">
-      <button class="service-question" onclick="toggleService(this)">
-        <span>🖨️ Printer Sales, Service & Repair</span>
-        <span class="faq-toggle">+</span>
+    <div class="service-card">
+      <button class="service-header" onclick="toggleService(this)">
+        <div class="service-icon">🖨️</div>
+        <div class="service-text">
+          <h3>Printer Sales, Service & Repair</h3>
+        </div>
+        <span class="service-toggle">+</span>
       </button>
-      <p class="service-answer">Expert <strong>printer repair in Ahmednagar</strong> for all brands including HP, Canon, Epson, Brother, and Samsung. Services include installation, cartridge refilling, network printer setup, paper jam fixes, and regular maintenance. We also sell genuine printer parts and consumables.</p>
+      <p class="service-body">Expert <strong>printer repair in Ahmednagar</strong> for all brands including HP, Canon, Epson, Brother, and Samsung. Services include installation, cartridge refilling, network printer setup, paper jam fixes, and regular maintenance. We also sell genuine printer parts and consumables.</p>
     </div>
 
-    <div class="service-item card">
-      <button class="service-question" onclick="toggleService(this)">
-        <span>🌐 Networking & Internet Solutions</span>
-        <span class="faq-toggle">+</span>
+    <div class="service-card">
+      <button class="service-header" onclick="toggleService(this)">
+        <div class="service-icon">🌐</div>
+        <div class="service-text">
+          <h3>Networking & Internet Solutions</h3>
+        </div>
+        <span class="service-toggle">+</span>
       </button>
-      <p class="service-answer">Complete <strong>networking solutions in Ahmednagar</strong> including structured cabling, router installation and configuration, LAN/Wi-Fi setup, network security, bandwidth optimization, and troubleshooting for homes, offices, and commercial establishments.</p>
+      <p class="service-body">Complete <strong>networking solutions in Ahmednagar</strong> including structured cabling, router installation and configuration, LAN/Wi-Fi setup, network security, bandwidth optimization, and troubleshooting for homes, offices, and commercial establishments.</p>
     </div>
 
-    <div class="service-item card">
-      <button class="service-question" onclick="toggleService(this)">
-        <span>📺 Interactive Panels & Digital Displays</span>
-        <span class="faq-toggle">+</span>
+    <div class="service-card">
+      <button class="service-header" onclick="toggleService(this)">
+        <div class="service-icon">📺</div>
+        <div class="service-text">
+          <h3>Interactive Panels & Digital Displays</h3>
+        </div>
+        <span class="service-toggle">+</span>
       </button>
-      <p class="service-answer">Supply and installation of interactive flat panels, smart boards, and digital display systems for schools, colleges, coaching classes, and corporate offices in Ahmednagar. Complete training and after-sales support included.</p>
+      <p class="service-body">Supply and installation of interactive flat panels, smart boards, and digital display systems for schools, colleges, coaching classes, and corporate offices in Ahmednagar. Complete training and after-sales support included.</p>
     </div>
 
-    <div class="service-item card">
-      <button class="service-question" onclick="toggleService(this)">
-        <span>🔧 Annual Maintenance Contracts (AMC)</span>
-        <span class="faq-toggle">+</span>
+    <div class="service-card">
+      <button class="service-header" onclick="toggleService(this)">
+        <div class="service-icon">🔧</div>
+        <div class="service-text">
+          <h3>Annual Maintenance Contracts (AMC)</h3>
+        </div>
+        <span class="service-toggle">+</span>
       </button>
-      <p class="service-answer"><strong>AMC services in Ahmednagar</strong> for CCTV systems, computers, printers, and networking equipment. Get priority support, regular preventive maintenance, discounted service rates, and free technical consultations. Perfect for businesses and institutions requiring uninterrupted IT operations.</p>
+      <p class="service-body"><strong>AMC services in Ahmednagar</strong> for CCTV systems, computers, printers, and networking equipment. Get priority support, regular preventive maintenance, discounted service rates, and free technical consultations. Perfect for businesses and institutions requiring uninterrupted IT operations.</p>
     </div>
 
   </div>
@@ -165,18 +221,43 @@
 <section class="section contact" id="contact">
   <h2>Get in Touch with Us - We're Here to Help!</h2>
 
-  <div class="contact-box">
-    <p><strong>Satyam Enterprises</strong></p>
-    <p><strong>📍 Address:</strong> Flat no.107, Ganesh Vihar Apartment, Savedi, Chowk, Pipeline Rd, Bhistabag, Ahmednagar, Maharashtra 414003</p>
-    <p><strong>📞 Phone:</strong> <a href="tel:+917558450517" class="contact-link">+91 7558450517</a></p>
-    <p><strong>✉️ Email:</strong> <a href="mailto:satyament.nagar@gmail.com" class="contact-link">satyament.nagar@gmail.com</a></p>
-    <p><strong>🗺️ Service Areas:</strong> Ahmednagar City, Savedi, Bhistabag, MIDC, and all surrounding areas</p>
+  <div class="contact-container">
+    <div class="contact-info">
+      <div class="contact-card">
+        <div class="contact-icon">📍</div>
+        <h3>Address</h3>
+        <p>Flat no.107, Ganesh Vihar Apartment<br>Savedi, Chowk, Pipeline Rd<br>Bhistabag, Ahmednagar<br>Maharashtra 414003</p>
+      </div>
 
-    <a class="whatsapp-btn"
-       href="https://wa.me/917558450517?text=Hi%20Satyam%20Enterprises,%20I%20need%20information%20about%20your%20services"
-       target="_blank">
-      💬 Chat with us on WhatsApp
-    </a>
+      <div class="contact-card">
+        <div class="contact-icon">📞</div>
+        <h3>Phone</h3>
+        <p><a href="tel:+917558450517" class="contact-link">+91 7558450517</a></p>
+        <p style="margin-top: 8px; font-size: 0.9rem; color: rgba(255,255,255,0.8);">Available 24/7 for urgent issues</p>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">✉️</div>
+        <h3>Email</h3>
+        <p><a href="mailto:satyament.nagar@gmail.com" class="contact-link">satyament.nagar@gmail.com</a></p>
+        <p style="margin-top: 8px; font-size: 0.9rem; color: rgba(255,255,255,0.8);">Response within 24 hours</p>
+      </div>
+
+      <div class="contact-card">
+        <div class="contact-icon">🗺️</div>
+        <h3>Service Areas</h3>
+        <p>Ahmednagar City, Savedi, Bhistabag, MIDC Area, and all surrounding areas in Ahmednagar District</p>
+      </div>
+    </div>
+
+    <div class="contact-cta">
+      <a class="whatsapp-btn"
+         href="https://wa.me/917558450517?text=Hi%20Satyam%20Enterprises,%20I%20need%20information%20about%20your%20services"
+         target="_blank">
+        💬 Chat with us on WhatsApp
+      </a>
+      <p class="demo-text">Quick, convenient, and instant communication</p>
+    </div>
   </div>
 </section>
 

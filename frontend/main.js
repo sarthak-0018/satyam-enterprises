@@ -5,6 +5,27 @@ const modalDataMap = {
   achievements: {}
 };
 
+// ================= HAMBURGER MENU =================
+document.addEventListener('DOMContentLoaded', function() {
+  const menuToggle = document.getElementById('menuToggle');
+  const navMenu = document.getElementById('navMenu');
+  
+  if (menuToggle && navMenu) {
+    menuToggle.addEventListener('click', function() {
+      menuToggle.classList.toggle('active');
+      navMenu.classList.toggle('active');
+    });
+    
+    // Close menu when a link is clicked
+    navMenu.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function() {
+        menuToggle.classList.remove('active');
+        navMenu.classList.remove('active');
+      });
+    });
+  }
+});
+
 // Helper: Fix image URL (don't add / before full Supabase URLs)
 function getImageUrl(img) {
   if (!img) return '';
@@ -419,9 +440,9 @@ function handleModalAction() {
 
 // Service toggle function
 function toggleService(button) {
-  const serviceItem = button.closest('.service-item');
-  if (!serviceItem) return;
-  serviceItem.classList.toggle('active');
+  const serviceCard = button.closest('.service-card');
+  if (!serviceCard) return;
+  serviceCard.classList.toggle('active');
 }
 
 // Close modal on overlay click
