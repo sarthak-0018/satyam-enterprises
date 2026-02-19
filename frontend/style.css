@@ -708,6 +708,35 @@ a:hover {
   font-size: 12px;
   color: #878787;
 }
+.btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #ff9f00;
+  color: var(--white);
+  box-shadow: 0 6px 18px rgba(255,159,0,0.16);
+}
+
+.btn-primary:hover {
+  background: #fb641b;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 26px rgba(251,100,27,0.12);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
 
 .enquire-btn {
   width: 100%;
