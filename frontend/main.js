@@ -195,7 +195,7 @@ fetch("/products")
               <h4>${p.name}</h4>
               ${p.description ? `<p class="card-description">${p.description.substring(0, 100)}${p.description.length > 100 ? '...' : ''}</p>` : ''}
               ${p.price ? `<p class="product-price">${p.price}</p>` : ''}
-              <button class="enquire-btn" onclick="event.stopPropagation(); openOrderModal('${p.name.replace(/'/g, "\\'")}')">
+              <button class="enquire-btn" onclick="event.stopPropagation(); openOrderAndWhatsApp('${p.name.replace(/'/g, "\\'")}')">
                 Buy / Enquire
               </button>
             </div>
@@ -433,9 +433,8 @@ function closeDescriptionModal() {
 
 function handleModalAction() {
   if (!currentModalItem || currentModalItem.type !== 'product') return;
-  // Close product description and open order modal for enquiries
-  closeDescriptionModal();
-  openOrderModal(currentModalItem.item.name);
+  // Use unified action: open order form and redirect to WhatsApp
+  openOrderAndWhatsApp(currentModalItem.item.name);
 }
 
 // Service toggle function
@@ -511,6 +510,25 @@ function openOrderModal(productName) {
     
   } catch (error) {
     console.error('Error opening order modal:', error);
+  }
+}
+
+// Open order modal and immediately open WhatsApp with a quick prefilled message
+function openOrderAndWhatsApp(productName) {
+  try {
+    selectedProductName = productName;
+    // If description modal is open, close it first
+    closeDescriptionModal();
+    // Open the order modal so the user can fill details if they want
+    openOrderModal(productName);
+
+    // Build a short quick-enquiry message and open WhatsApp in a new tab
+    const adminPhone = "7558450517";
+    const message = `Hi Satyam Enterprises, I'm interested in *${productName}*. Please contact me regarding availability and pricing.`;
+    const whatsappURL = `https://wa.me/${adminPhone}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappURL, '_blank');
+  } catch (err) {
+    console.error('Error in openOrderAndWhatsApp:', err);
   }
 }
 
