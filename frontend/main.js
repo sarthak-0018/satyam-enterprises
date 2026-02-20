@@ -399,6 +399,130 @@ function openDescriptionModal(type, id) {
   window.descriptionImages = images;
 }
 
+/* ==================== EDITORIAL SLIDESHOW MODULE ==================== */
+(function(){
+  const AUTO_MS = 5000;
+
+  function qs(sel, root=document){ return root.querySelector(sel); }
+  function qsa(sel, root=document){ return Array.from((root||document).querySelectorAll(sel)); }
+
+  class Slideshow {
+    constructor(root){
+      this.root = root;
+      this.track = qs('.slideshow-track', root);
+      this.slides = qsa('.slide', root);
+      this.dots = qsa('.dot', root);
+      this.prevBtn = qs('.slideshow-arrow.prev', root);
+      this.nextBtn = qs('.slideshow-arrow.next', root);
+      this.index = 0;
+      this.timer = null;
+      this.isPaused = false;
+      this.startX = null;
+      this.bind();
+      this.goTo(0);
+      this.startAuto();
+    }
+
+    bind(){
+      if(this.prevBtn) this.prevBtn.addEventListener('click', ()=> this.prev());
+      if(this.nextBtn) this.nextBtn.addEventListener('click', ()=> this.next());
+      this.dots.forEach(d=> d.addEventListener('click', (e)=>{ this.goTo(Number(d.dataset.index || d.getAttribute('data-index'))); }));
+
+      this.root.addEventListener('mouseenter', ()=> this.pause());
+      this.root.addEventListener('mouseleave', ()=> this.resume());
+      this.root.addEventListener('focusin', ()=> this.pause());
+      this.root.addEventListener('focusout', ()=> this.resume());
+
+      // touch swipe
+      this.root.addEventListener('touchstart', (e)=> this.onTouchStart(e), {passive:true});
+      this.root.addEventListener('touchmove', (e)=> this.onTouchMove(e), {passive:true});
+      this.root.addEventListener('touchend', (e)=> this.onTouchEnd(e));
+
+      // keyboard navigation
+      document.addEventListener('keydown', (e)=>{
+        if(document.activeElement && this.root.contains(document.activeElement) || document.body){
+          if(e.key === 'ArrowLeft') this.prev();
+          if(e.key === 'ArrowRight') this.next();
+        }
+      });
+
+      // slide click / CTA scroll
+      this.slides.forEach(slide => {
+        slide.addEventListener('click', (e)=>{
+          const target = slide.dataset.target || (slide.querySelector('.slide-cta') && slide.querySelector('.slide-cta').getAttribute('data-scroll'));
+          if(target){
+            e.preventDefault();
+            document.querySelector(target).scrollIntoView({behavior:'smooth'});
+          }
+        });
+      });
+    }
+
+    onTouchStart(e){ this.startX = e.touches[0].clientX; }
+    onTouchMove(e){ this.lastX = e.touches[0].clientX; }
+    onTouchEnd(e){ if(!this.startX || !this.lastX) return; const dx = this.startX - this.lastX; if(Math.abs(dx) > 40){ dx>0 ? this.next() : this.prev(); } this.startX = this.lastX = null; }
+
+    startAuto(){ this.stopAuto(); this.timer = setInterval(()=>{ if(!this.isPaused) this.next(); }, AUTO_MS); }
+    stopAuto(){ if(this.timer) { clearInterval(this.timer); this.timer = null; } }
+    pause(){ this.isPaused = true; this.root.classList.add('is-paused'); }
+    resume(){ this.isPaused = false; this.root.classList.remove('is-paused'); }
+
+    prev(){ this.goTo((this.index - 1 + this.slides.length) % this.slides.length); }
+    next(){ this.goTo((this.index + 1) % this.slides.length); }
+
+    goTo(i){
+      this.index = i;
+      const offset = - (i * 100);
+      this.track.style.transform = `translateX(${offset}%)`;
+      this.slides.forEach((s, idx)=>{
+        s.classList.toggle('is-active', idx === i);
+        s.setAttribute('aria-hidden', idx===i? 'false' : 'true');
+      });
+      this.dots.forEach((d, idx)=> d.classList.toggle('active', idx===i));
+      this._animateReveal(this.slides[i]);
+      // custom cursor per slide (subtle personality)
+      document.body.classList.remove('cursor-crosshair','cursor-grab','cursor-default');
+      const cursors = ['cursor-grab','cursor-crosshair','cursor-default','cursor-grab'];
+      document.body.classList.add(cursors[i] || 'cursor-default');
+    }
+
+    _animateReveal(slide){
+      // animated text reveal: stagger letters
+      const el = slide.querySelector('.headline .reveal');
+      if(!el) return;
+      const text = el.textContent.trim();
+      el.innerHTML = '';
+      const frag = document.createDocumentFragment();
+      text.split('').forEach((ch, idx)=>{
+        const span = document.createElement('span');
+        span.textContent = ch;
+        span.style.display = 'inline-block';
+        span.style.transform = 'translateY(120%)';
+        span.style.opacity = '0';
+        span.style.transition = `transform 550ms cubic-bezier(.2,.9,.3,1) ${idx*30}ms, opacity 550ms ${idx*30}ms`;
+        frag.appendChild(span);
+      });
+      el.appendChild(frag);
+      // trigger
+      requestAnimationFrame(()=>{
+        Array.from(el.children).forEach(span=>{ span.style.transform='translateY(0)'; span.style.opacity='1'; });
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const root = document.querySelector('.hero-slideshow');
+    if(!root) return;
+    // init slideshow
+    const ss = new Slideshow(root);
+    // pause on pointer down (touch friendly)
+    root.addEventListener('pointerdown', ()=> ss.pause());
+    root.addEventListener('pointerup', ()=> ss.resume());
+    // expose for debugging
+    window.__heroSlideshow = ss;
+  });
+})();
+
 function switchDescriptionImage(index) {
   const images = window.descriptionImages;
   if (!images || !images[index]) return;

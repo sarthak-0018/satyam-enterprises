@@ -29,6 +29,7 @@
   <meta name="twitter:description" content="CCTV installation, computer repair, and IT support services in Ahmednagar">
   
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -62,16 +63,95 @@
   </nav>
 </header>
 
-<!-- ================= HERO ================= -->
-<section class="hero">
-  <div class="hero-content">
-    <h1>Professional CCTV Installation & Computer Repair Services in Ahmednagar</h1>
-    <p class="hero-tagline">
-      CCTV Installation • Computer Hardware Repair • Printer Services • Networking Solutions • Interactive Panels • IT Support in Ahmednagar, Maharashtra
-    </p>
-    <div class="hero-cta">
-      <a href="#contact" class="cta-button primary">Get in Touch</a>
-      <a href="#services" class="cta-button secondary">Explore Services</a>
+<!-- ================= HERO (Editorial Slideshow) ================= -->
+<section class="hero hero-slideshow" id="hero">
+  <div class="slideshow" role="region" aria-label="Featured highlights">
+    <div class="slideshow-track">
+      <!-- Slide 1 -->
+      <article class="slide" data-target="#products-section" data-slide="0" tabindex="0" aria-roledescription="slide" aria-label="CCTV and Security">
+        <a class="slide-link" href="#products-section">
+          <div class="slide-media">
+            <img class="slide-image" src="assets/hero-cctv.jpg" alt="Stylized CCTV camera illustration">
+            <svg class="slide-blob" viewBox="0 0 600 600" preserveAspectRatio="none" aria-hidden="true"><path fill="#f5e8d3"></path></svg>
+            <div class="grain" aria-hidden="true"></div>
+          </div>
+          <div class="slide-copy">
+            <div class="kicker">CCTV & Security Solutions</div>
+            <h2 class="headline"><span class="reveal">Secure Your Space</span></h2>
+            <p class="deck">24/7 Protection backed by expert installation.</p>
+            <div class="slide-actions">
+              <button class="cta-button primary slide-cta" data-scroll="#products-section">View Products</button>
+            </div>
+          </div>
+        </a>
+      </article>
+
+      <!-- Slide 2 -->
+      <article class="slide" data-target="#works-section" data-slide="1" tabindex="0" aria-roledescription="slide" aria-label="Recent Installations">
+        <a class="slide-link" href="#works-section">
+          <div class="slide-media">
+            <img class="slide-image" src="assets/hero-works.jpg" alt="Grid of recent installation thumbnails">
+            <svg class="slide-blob" viewBox="0 0 600 600" preserveAspectRatio="none" aria-hidden="true"><path fill="#e8f7f2"></path></svg>
+            <div class="grain" aria-hidden="true"></div>
+          </div>
+          <div class="slide-copy">
+            <div class="kicker">Our Recent Installations</div>
+            <h2 class="headline"><span class="reveal">Built to Last</span></h2>
+            <p class="deck">A mosaic of real projects — craftsmanship you can trust.</p>
+            <div class="slide-actions">
+              <button class="cta-button primary slide-cta" data-scroll="#works-section">See Our Work</button>
+            </div>
+          </div>
+        </a>
+      </article>
+
+      <!-- Slide 3 -->
+      <article class="slide" data-target="#achievements-section" data-slide="2" tabindex="0" aria-roledescription="slide" aria-label="Achievements">
+        <a class="slide-link" href="#achievements-section">
+          <div class="slide-media">
+            <img class="slide-image" src="assets/hero-achievements.jpg" alt="Certificates and awards styled graphic">
+            <svg class="slide-blob" viewBox="0 0 600 600" preserveAspectRatio="none" aria-hidden="true"><path fill="#fff4e6"></path></svg>
+            <div class="grain" aria-hidden="true"></div>
+          </div>
+          <div class="slide-copy">
+            <div class="kicker">Trusted by 500+ Clients</div>
+            <h2 class="headline"><span class="reveal">Proven Track Record</span></h2>
+            <p class="deck">Awards, certificates and happy clients across Ahmednagar.</p>
+            <div class="slide-actions">
+              <button class="cta-button primary slide-cta" data-scroll="#achievements-section">Our Achievements</button>
+            </div>
+          </div>
+        </a>
+      </article>
+
+      <!-- Slide 4 -->
+      <article class="slide" data-target="#contact" data-slide="3" tabindex="0" aria-roledescription="slide" aria-label="Contact">
+        <a class="slide-link" href="#contact">
+          <div class="slide-media">
+            <img class="slide-image" src="assets/hero-contact.jpg" alt="Person consulting with technician illustration">
+            <svg class="slide-blob" viewBox="0 0 600 600" preserveAspectRatio="none" aria-hidden="true"><path fill="#eef6ff"></path></svg>
+            <div class="grain" aria-hidden="true"></div>
+          </div>
+          <div class="slide-copy">
+            <div class="kicker">Get Expert Consultation</div>
+            <h2 class="headline"><span class="reveal">Let's Talk Solutions</span></h2>
+            <p class="deck">Free quote and consultation from our technical team.</p>
+            <div class="slide-actions">
+              <button class="cta-button primary slide-cta" data-scroll="#contact">Contact Us</button>
+            </div>
+          </div>
+        </a>
+      </article>
+    </div>
+
+    <button class="slideshow-arrow prev" aria-label="Previous slide">‹</button>
+    <button class="slideshow-arrow next" aria-label="Next slide">›</button>
+
+    <div class="slideshow-dots" role="tablist" aria-label="Slide indicators">
+      <button class="dot" data-index="0" aria-label="Slide 1" role="tab"></button>
+      <button class="dot" data-index="1" aria-label="Slide 2" role="tab"></button>
+      <button class="dot" data-index="2" aria-label="Slide 3" role="tab"></button>
+      <button class="dot" data-index="3" aria-label="Slide 4" role="tab"></button>
     </div>
   </div>
 </section>
